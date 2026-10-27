@@ -1,0 +1,16 @@
+id,description,role,model,training_command,evaluation_config,released_weights
+hiblastnet,"HiBlastNet: GCNet-S + BC-MSRR + LCJS (size, local, healthy)",main,gcnet_s,python train.py --config configs/training/hiblastnet.yaml,configs/evaluation/hiblastnet.yaml,"weights/current_bc_lcjs_seed{100,101,102}.pth"
+gcnet_bc,"Refinement control: GCNet-S + BC-MSRR, no LCJS",control,gcnet_s,python train.py --config configs/training/gcnet_bc.yaml,configs/evaluation/gcnet_bc.yaml,"weights/current_bc_control_seed{100,101,102}.pth"
+gcnet_bc_size,GCNet-S + BC-MSRR + LCJS size term,ablation,gcnet_s,python train.py --config configs/training/gcnet_bc_size.yaml,configs/evaluation/gcnet_bc_size.yaml,
+gcnet_bc_local_healthy,GCNet-S + BC-MSRR + LCJS local and healthy terms,ablation,gcnet_s,python train.py --config configs/training/gcnet_bc_local_healthy.yaml,configs/evaluation/gcnet_bc_local_healthy.yaml,
+gcnet_bc_size_local,GCNet-S + BC-MSRR + LCJS size and local terms,ablation,gcnet_s,python train.py --config configs/training/gcnet_bc_size_local.yaml,configs/evaluation/gcnet_bc_size_local.yaml,
+gcnet_bc_size_healthy,GCNet-S + BC-MSRR + LCJS size and healthy terms,ablation,gcnet_s,python train.py --config configs/training/gcnet_bc_size_healthy.yaml,configs/evaluation/gcnet_bc_size_healthy.yaml,
+gcnet,Baseline: GCNet-S without BC-MSRR or LCJS,ablation,gcnet_s,python train.py --config configs/training/gcnet.yaml,configs/evaluation/gcnet.yaml,"weights/current_b_plain_seed{100,101,102}.pth"
+gcnet_lcjs,"GCNet-S + LCJS, without BC-MSRR",ablation,gcnet_s,python train.py --config configs/training/gcnet_lcjs.yaml,configs/evaluation/gcnet_lcjs.yaml,"weights/current_b_lcjs_seed{100,101,102}.pth"
+gcnet_bc_blob,GCNet-S + BC-MSRR + adapted Blob loss (weight 0.3),ablation,gcnet_s,python scripts/train_blob_loss.py --blob-weight 0.3 --config configs/training/gcnet_bc_blob.yaml,configs/evaluation/gcnet_bc_blob.yaml,
+unet,U-Net,comparison,unet,python train.py --config configs/training/unet.yaml,configs/evaluation/unet.yaml,
+deeplabv3_resnet50,DeepLabV3-ResNet50,comparison,deeplabv3_resnet50,python train.py --config configs/training/deeplabv3_resnet50.yaml,configs/evaluation/deeplabv3_resnet50.yaml,
+pidnet_s,PIDNet-S,comparison,pidnet_s,python train.py --config configs/training/pidnet_s.yaml,configs/evaluation/pidnet_s.yaml,
+sctnet_b,SCTNet-B,comparison,sctnet_b,python train.py --config configs/training/sctnet_b.yaml,configs/evaluation/sctnet_b.yaml,
+efficientvit_b2,EfficientViT-B2,comparison,efficientvit_b2,python train.py --config configs/training/efficientvit_b2.yaml,configs/evaluation/efficientvit_b2.yaml,
+segformer_b1,SegFormer-B1,comparison,segformer_b1,python train.py --config configs/training/segformer_b1.yaml,configs/evaluation/segformer_b1.yaml,

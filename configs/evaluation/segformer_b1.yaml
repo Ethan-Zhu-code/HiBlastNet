@@ -1,0 +1,42 @@
+paths:
+  dataset_root: ../../data/blastleaf
+  output_dir: ../../outputs/segformer_b1
+data:
+  full_leaf_split: test
+model:
+  name: segformer_b1
+  num_classes: 4
+  pidnet_augment: true
+  deploy: false
+  gcnet_channels: 32
+  gcnet_ppm_channels: 128
+  gcnet_head_channels: 64
+  gcnet_detail_channels_multiplier: 1.0
+  gcnet_multiscale_detail_refinement: false
+  gcnet_multiscale_detail_channels: 32
+  gcnet_multiscale_context_branch: true
+  gcnet_multiscale_boundary_fusion: false
+  lesion_aux_head: false
+  decoder_embed_dim: 256
+  drop_path_rate: 0.1
+inference_tiling:
+  tile_height: 1024
+  tile_width: 640
+  stride_y: 768
+  stride_x: 480
+  hann_min_weight: 0.001
+  batch_size: 4
+runtime:
+  amp: auto
+  compile: 'off'
+visualization:
+  save_preds: true
+  visualize: true
+evaluation:
+  component_connectivity: 8
+  component_iou_threshold: 0.1
+  component_area_bins:
+  - 32
+  - 128
+  - 512
+  boundary_tolerance_px: 2

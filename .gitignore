@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+weights/
+data/
+outputs/
+*.pth
+*.pt
+*.npz
+*.zip

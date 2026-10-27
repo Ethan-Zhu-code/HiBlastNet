@@ -1,0 +1,10 @@
+# Install PyTorch and torchvision first, using the command for your hardware from
+# https://pytorch.org/get-started/locally/ . The paper experiments used
+# torch 2.5.1 + CUDA 12.1 and torchvision 0.20.1.
+torch>=2.1.0
+torchvision
+numpy>=1.26.0
+Pillow>=10.0.0
+matplotlib>=3.8.0
+scipy>=1.10.0
+PyYAML>=6.0

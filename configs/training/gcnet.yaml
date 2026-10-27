@@ -1,0 +1,121 @@
+paths:
+  dataset_root: ../../data/blastleaf
+  output_dir: ../../outputs/training/gcnet
+model:
+  name: gcnet_s
+  num_classes: 4
+  input_size: 1024
+  input_height: 1024
+  input_width: 640
+  gcnet_channels: 32
+  gcnet_ppm_channels: 128
+  gcnet_head_channels: 64
+  gcnet_detail_channels_multiplier: 1.5
+  lesion_aux_head: true
+  # BC-MSRR refinement branch
+  gcnet_multiscale_detail_refinement: false
+  gcnet_multiscale_detail_channels: 32
+  gcnet_multiscale_context_branch: false
+  gcnet_multiscale_boundary_fusion: false
+data:
+  batch_size: 4
+  num_workers: 4
+  epoch_crops: 2000
+  metadata_cache_dir: ../../outputs/training/_metadata/gcnet
+  component_connectivity: 8
+  hard_negative_min_leaf_fraction: 0.05
+  centered_component_region_fraction: 0.5
+  enable_augmentation: true
+  augmentation_profile: native_sparse_combined_v1
+sampling:
+  susceptible_centered: 0.25
+  resistant_centered: 0.25
+  positive_context: 0.2
+  hard_negative: 0.2
+  uniform: 0.1
+  resistant_small_component_alpha: 0.0
+  resistant_small_component_tau: 128.0
+validation:
+  interval: 5
+  selection_metric: lesion_mean_dice
+inference_tiling:
+  tile_height: 1024
+  tile_width: 640
+  stride_y: 768
+  stride_x: 480
+  hann_min_weight: 0.001
+  batch_size: 4
+evaluation:
+  component_connectivity: 8
+  component_iou_threshold: 0.1
+  component_area_bins:
+  - 32
+  - 128
+  - 512
+  boundary_tolerance_px: 2
+  seam_band_px: 16
+training:
+  epochs: 140
+  lr: 0.0001
+  seed: 100  # Override with --seed
+  save_every: 0
+  ema_alpha: 0.25
+  patience: 0
+  warmup_epochs: 3.0
+  warmup_bias_lr: 0.1
+  warmup_momentum: 0.8
+  resume: null
+optimization:
+  optimizer: adam
+  weight_decay: 0.0
+  scheduler: cosine
+  min_lr: 1.0e-06
+runtime:
+  amp: auto
+  compile: false
+  cudnn_deterministic: false
+  cudnn_benchmark: true
+  pin_memory: false
+  persistent_workers: false
+  non_blocking: false
+visualization:
+  class_names:
+  - background
+  - healthy
+  - susceptible
+  - resistant
+  plot_samples: false
+  sample_plot_count: 8
+  sample_plot_interval: 10
+loss:
+  name: gcnet
+  ignore_index: -1
+  ohem_threshold: 0.9
+  ohem_min_kept: 100000
+  gcnet_aux_weight: 0.4
+  tversky_weight: 0.5
+  tversky_alpha: 0.5
+  tversky_beta: 0.5
+  lesion_aux_weight: 0.5
+  lesion_aux_pos_weight: auto
+  lesion_aux_pos_weight_max: 20.0
+  lesion_aux_loss: bce
+  gcnet_lesion_boundary_weight: 0.15
+  gcnet_lesion_boundary_kernel_size: 3
+  gcnet_lesion_boundary_resistant_multiplier: 1.5
+  # BC-MSRR boundary loss
+  gcnet_refinement_boundary_weight: 0.0
+  gcnet_refinement_boundary_kernel_size: 3
+  # LCJS size term
+  gcnet_small_instance_weight: 0.0
+  gcnet_small_instance_alpha: 1.0
+  gcnet_small_instance_tau: 128.0
+  gcnet_small_instance_max_weight: 2.0
+  # LCJS component-local (direct) and healthy hard-negative terms
+  gcnet_cpmr_direct_weight: 0.0
+  gcnet_cpmr_healthy_weight: 0.0
+  gcnet_cpmr_context_pixels: 8
+  gcnet_cpmr_max_components: 16
+  gcnet_cpmr_small_fraction: 0.75
+  gcnet_cpmr_small_area: 512
+  gcnet_cpmr_dice_weight: 0.5
