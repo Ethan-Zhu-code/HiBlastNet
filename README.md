@@ -97,6 +97,15 @@ The lesion classes describe lesion appearance, not the resistance of the plant.
 
 `split_summary.json` records the photograph-to-split assignment. Each `relations/*.json` file repeats a leaf's identity, size and file paths. The loader checks all of these files for consistency before training or evaluation. To train on your own data, produce the same structure (see `blastseg/data/full_leaf.py`).
 
+### Original photo examples
+
+Download **`BlastLeaf_30_Original_Photos.zip`** (419 MB) for 30 original reference-board JPEGs from the BlastLeaf test split. The photos correspond to 72 annotated leaf ROIs and are provided separately from the cropped ROI dataset. The archive includes a manifest with source image IDs, original filenames, and SHA-256 checksums.
+
+| Mirror | Link | Extraction code |
+| --- | --- | --- |
+| OneDrive | [Download original photos](https://1drv.ms/u/c/1495c176035c0989/IQBtNABm1JC3SIWQSa1nlXPRAYTeY_4OhdFh1d5rHNjfLeA?e=g9yzBJ) | — |
+| Baidu Netdisk | [Download original photos](https://pan.baidu.com/s/1EUgH1kOioeeU1JFz02Q_cw?pwd=ek4a) | `ek4a` |
+
 ## Trained weights
 
 Checkpoints are released for the four configurations of the paper's ablation (Table 3), each trained with seeds 100, 101 and 102:
