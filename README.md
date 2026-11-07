@@ -14,6 +14,7 @@
   <a href="#train">Train</a> &nbsp;·&nbsp;
   <a href="#evaluate">Evaluate</a> &nbsp;·&nbsp;
   <a href="#predict">Predict</a> &nbsp;·&nbsp;
+  <a href="#grade-a-raw-photo">Grade a photo</a> &nbsp;·&nbsp;
   <a href="#methods-and-configurations">Methods</a> &nbsp;·&nbsp;
   <a href="#citation">Citation</a>
 </p>
@@ -26,10 +27,7 @@ This repository contains the code to train and evaluate the segmentation models 
 | :--- | :--- | :--- |
 | Leaves are processed at their calibrated resolution in overlapping 1024 × 640 windows, and the window logits are fused with Hann weights. | BC-MSRR adds a refinement branch that combines local, contextual and boundary features. | LCJS adds size-aware, component-local and healthy-tissue terms to the training loss. It adds nothing at inference time. |
 
-**Scope.** The repository covers the segmentation experiments: training, full-leaf evaluation and prediction for HiBlastNet, its ablations and the comparison models. It does **not** include the steps around them that the paper also describes:
-
-- reference-board rectification and leaf-ROI extraction from raw photographs;
-- the lesion descriptors, the 0–9 operational grade and the desktop application.
+**Scope.** The repository covers the segmentation experiments and a command-line workflow for reference-board photographs: board rectification, leaf extraction, full-leaf segmentation, and the operational 0–9 grade. The desktop application is separate.
 
 ## Install
 
@@ -202,13 +200,37 @@ python scripts/analyze_predictions.py --dataset-root data/blastleaf --split test
 
 ## Predict
 
-Prediction expects calibrated leaf ROIs like those in BlastLeaf: one leaf per image, 60 px/mm, long axis vertical. Raw photographs are not supported, because the ROI extraction step is not part of this repository.
+This entry point takes calibrated leaf ROIs like those in BlastLeaf: one leaf per image, 60 px/mm, long axis vertical. For an original reference-board photograph, use [Grade a raw photo](#grade-a-raw-photo).
 
 ```bash
 python full_leaf_inference.py --model-path weights/current_bc_lcjs_seed100.pth --image path/to/leaf.png --output-dir outputs/prediction
 ```
 
 The output is a class-label PNG at the input size, using labels 0–3 (it looks black in ordinary image viewers), plus a `.tiles.json` file describing the windows. To predict every leaf of a dataset split, use `--dataset-root data/blastleaf --split test` instead of `--image`.
+
+## Grade a raw photo
+
+Use one of the [original photo examples](#original-photo-examples), or take a photo of detached leaves on the [A4 ArUco reference board](.github/media/reference-board-a4.svg). Print the template at **100% / actual size**, check that each marker is 16 mm wide, and lay the leaves flat in the central area without overlap. Keep the markers in view on both sides. Arbitrary field photos without this board are outside this workflow.
+
+After installing the main requirements and putting `current_bc_lcjs_seed100.pth` in `weights/`, run:
+
+```bash
+python -m pip install -r requirements-photo.txt
+python scripts/run_photo_pipeline.py --image "path/to/board.jpg" --output-dir outputs/board
+```
+
+Use `--model-path` to select another downloaded checkpoint and `--device cpu` to force CPU inference. The output directory must be new or empty.
+
+| Output | What it contains |
+| --- | --- |
+| `summary.csv` | One row per detected leaf: grade, lesion counts, fractions, and lengths |
+| `rectified_preview.jpg`, `leaf_locations.jpg` | Rectified board and numbered crop locations for review |
+| `leaves/leaf_*/` | 60 px/mm ROI, class-label mask, colour overlay, geometry and lesion measurements |
+| `run.json` | Calibration, inference settings, and completion or failure status |
+
+The script retains the raw prediction mask. For measurements, it excludes same-class components smaller than 24 pixels and applies the paper's susceptible-area-based 0–9 rule (`seedling_new_standard_v2`). An empty predicted leaf mask is left ungraded. Check the crop and overlay before using the grade. A photo with inadequate calibration fails rather than assigning a grade at an assumed scale.
+
+The board layout and ROI detector are adapted from the companion `rice_blast_system` implementation. Detection uses a reduced board preview; each inference crop is sampled directly from the source image at 60 px/mm.
 
 ## Methods and configurations
 

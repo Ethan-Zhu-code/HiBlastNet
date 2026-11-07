@@ -51,6 +51,10 @@ def resolve_tiling(checkpoint, overrides, *, allow_override=False):
 
 def _load_model(path, device, model_name=None, num_classes=4, weights="selected"):
     checkpoint = normalize_checkpoint(read_checkpoint(path, device=device, weights_only=False))
+    return model_from_checkpoint(checkpoint, device, model_name, num_classes, weights)
+
+
+def model_from_checkpoint(checkpoint, device, model_name=None, num_classes=4, weights="selected"):
     name, deploy = get_checkpoint_model_identity(checkpoint, default_model_name=model_name or "gcnet_s", default_deploy=False)
     config = checkpoint.get("model_config", {})
     accepted = {
@@ -93,7 +97,7 @@ def main(argv=None):
     }, allow_override=args.override_checkpoint_geometry)
     for key, value in tiling.items():
         setattr(args, key, value)
-    model = _load_model(args.model_path, device, args.model_name, args.num_classes, weights=args.weights)
+    model = model_from_checkpoint(checkpoint, device, args.model_name, args.num_classes, weights=args.weights)
     output_dir = Path(args.output_dir); output_dir.mkdir(parents=True, exist_ok=True)
     if args.image:
         items = [(Path(args.image).stem, Path(args.image), args.relation)]

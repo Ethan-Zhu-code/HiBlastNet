@@ -1,0 +1,2 @@
+# Install requirements.txt and the appropriate PyTorch build first.
+opencv-contrib-python-headless>=4.8
