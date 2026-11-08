@@ -1,10 +1,11 @@
+<p align="center"><strong>English</strong> &nbsp;·&nbsp; <a href="README.zh-CN.md">简体中文</a></p>
+
 <p align="center">
-  <img src=".github/media/hiblastnet-banner.png" alt="HiBlastNet — rice leaf blast lesion segmentation. Botanical leaf and segmentation concept illustration." width="100%" />
+  <img src=".github/media/hiblastnet-banner-clean.png" alt="HiBlastNet — rice leaf blast lesion segmentation. Botanical leaf and segmentation concept illustration." width="100%" />
 </p>
 
 <p align="center">
-  <strong>Full-leaf rice blast lesion segmentation on calibrated leaf images.</strong><br />
-  GCNet-S backbone · BC-MSRR refinement · LCJS supervision
+  <strong>Full-leaf rice blast lesion segmentation on calibrated leaf images.</strong>
 </p>
 
 <p align="center">
