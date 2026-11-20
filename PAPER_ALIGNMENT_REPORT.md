@@ -1,6 +1,6 @@
 # HiBlastNet 投稿前仓库一致性核对报告
 
-核查日期：2026-11-19（America/Denver；链接测试时 UTC 已为 2026-11-20）。
+首次核查：2026-11-19（America/Denver；链接测试时 UTC 已为 2026-11-20）。链接修复更新：2026-11-20（America/Denver）。
 
 ## 结论
 
@@ -9,16 +9,16 @@
 - 双语 README 的题目已同步，引用状态仍为 in preparation；消融表引用改为 Table 7。
 - 复现脚本保存的 40 个参考数字（4 方法 × 5 指标 × mean/SD）与提示词完全一致，未改任何参考数字或容差。
 - 实际计算了权重 ZIP 内的 12 个 SHA-256，全部与包内清单及本地解压文件一致；提示词明确提供的 6 个论文哈希全部匹配。
-- 6 个分支下载入口完成匿名落地页检查，但没有实际下载验证。其中两个 OneDrive 入口返回标题为 Error 的页面，需人工处理。
+- 两份 README 中数据集和权重的旧 OneDrive 地址已替换为当前共享地址。已在 OneDrive 管理页核对“拥有链接的人员都可查看”，并在已登录浏览器打开对应 ZIP 的下载页面；未做匿名完整下载验证。其余四个下载入口保持原样。
 - **发现一个范围外发布阻塞：干净检出缺失整个 `blastseg/data/` 代码目录。** 本轮仅报告，未擅自改忽略规则或补代码。
 
 ## 工作边界和交付位置
 
-- 任务依据：`E:/Download/REPO_ALIGNMENT_PROMPT_20261120.md`，论文事实以该提示词为准，没有修改论文。
+- 任务依据：`E:/Download/REPO_ALIGNMENT_PROMPT_20261120.md`，论文事实以该提示词为准，没有修改论文。初次按提示词不替换链接；用户随后在本聊天核对 OneDrive 后明确要求修复，故本次追加替换两个 OneDrive 地址。
 - 原工作目录：`D:/Code/Writing/HiBlastNet`，原分支 `main`。
 - 对齐分支：`paper-alignment-20261120`，基于本地提交 `f752635cb6a6e68548c261a1824f71f7440f9dcc`。
 - 本分支工作目录：`C:/Users/13763/.codex/visualizations/2026/10/22/01a16176-9587-7431-b274-0db501ad7b05/alignment_20261120/HiBlastNet`。
-- 使用独立 Git worktree；原 `main` 上两份 README 的未提交修改均予以保留，未移入本提交。
+- 使用独立 Git worktree；原 `main` 上两份 README 的未提交修改均予以保留。仅将此次获准的两个 OneDrive 地址同步到本分支，没有整体合并原 `main` 的未提交改动。
 - 未执行 push、fetch、打 tag、创建 Release 或任何远端修改；也未改变仓库可见性。
 - 训练、推理、评估、分级算法，配置、模型、权重和许可证均未修改。未加入专家研究内容。
 
@@ -34,7 +34,7 @@
 | 容差说明 | 已补充 | 默认 0.05，仅比较三种子均值；百分比指标单位为百分点，FP/leaf 单位为组件/叶；SD 不参与判定。 |
 | 权重哈希 | 一致，已补入双语 README | ZIP 12/12 与清单一致，12/12 与解压文件一致，论文明确提供的 6/6 一致。 |
 | README 论文事实 | 核对一致或补清口径 | 下表详列；没有擅自改论文数字。 |
-| 下载链接 | 待人工决定 | 保留分支原链接，测试结果和与主工作树的差异见后文。 |
+| 下载链接 | 两个 OneDrive 地址已修复，其余待验证 | 双语 README 已同步当前数据集/权重地址；管理页权限及已登录下载页面已核对，匿名完整下载、百度入口仍待验证。 |
 
 ### 当前题目与横幅
 
@@ -105,35 +105,39 @@ Get-ChildItem -LiteralPath 'weights' -Filter '*.pth' | Get-FileHash -Algorithm S
 
 本次核查的是已有本地发布包，**没有证明网盘当前实际返回的包就是该本地文件**；须下载后再核对。
 
-## 下载链接匿名测试
+## 下载链接核对与修复
 
 方法：无登录、无预置 Cookie 的 HTTP GET，响应体最多读取 65,536 字节；记录状态码、跳转、页面标题。不提交提取码、不登录、不下载大型文件。
 
+后续浏览器核对：在用户要求的内置浏览器进入 `https://onedrive.live.com/my`，分别打开 `blastleaf.zip` 和 `HiBlastNet_Weights.zip` 的“管理访问权限 → 链接”。每个文件各有 1 条“拥有链接的人员都可查看”的链接，地址与原 main 未提交 README 中较新的 OneDrive 地址一致。数据集链接设置中未设到期日期。两个当前地址均能打开对应 ZIP 的预览页面并显示“下载”按钮；页面提示 ZIP 无法预览，不是此前“无法访问此文档”的错误。
+
+以上浏览器核对基于已登录账号，**没有完成未登录访问及完整文件下载，也未证明远端包与本地包哈希一致**。本次不需要修改共享权限或重新上传文件；只替换 README 地址。
+
 测试时间：分支链接 2026-11-19 23:37 America/Denver；主工作树链接 23:36（对应 UTC 2026-11-20）。原始 JSON 的时间字段虽然命名为 `tested_at_utc`，实际保存的是带 `-07:00` 偏移的时间戳；此处已按偏移解释。
 
-| 资源 | 分支 README 中的完整 URL | 提取码 | 匿名测试结果 | 文件下载结论 |
+| 资源 | 当前分支 README 中的完整 URL | 提取码 | 已有测试结果 | 文件下载结论 |
 | --- | --- | --- | --- | --- |
-| 数据集 / OneDrive | [分享入口](https://1drv.ms/u/c/1495c176035c0989/IQC3HxyG_ktHSpHlq_E-5vmXAYjrLFhmseHouaPyHpjrC-4?e=SkNipz) | — | HTTP 200，错误落地页（标题 Error） | 需人工测试 |
+| 数据集 / OneDrive | [分享入口](https://1drv.ms/u/c/1495c176035c0989/IQCrwwXhApP_TpZNFzTIXQelAe2YA5BwKQ68frvLGekOpbQ?e=dtETWr) | — | 当前管理页为持有链接可查看；已登录打开 blastleaf.zip 下载页面；匿名 GET 仅到动态入口 | 匿名完整下载仍需测试 |
 | 数据集 / 百度 | [分享入口](https://pan.baidu.com/s/1K6AEge89TWjPSs5MAovVrg?pwd=p1p6) | p1p6 | HTTP 200，提取码页，未验证取文件 | 需人工测试 |
 | 30 张原图 / OneDrive | [分享入口](https://1drv.ms/u/c/1495c176035c0989/IQBtNABm1JC3SIWQSa1nlXPRAYTeY_4OhdFh1d5rHNjfLeA?e=g9yzBJ) | — | HTTP 200，动态应用入口，未验证取文件 | 需人工测试 |
 | 30 张原图 / 百度 | [分享入口](https://pan.baidu.com/s/1EUgH1kOioeeU1JFz02Q_cw?pwd=ek4a) | ek4a | HTTP 200，提取码页，未验证取文件 | 需人工测试 |
-| 权重 / OneDrive | [分享入口](https://1drv.ms/u/c/1495c176035c0989/IQBf-shaXSRVTaecn952a2AjAYvkrAHUWIZh25kWocqEaow?e=8L8BUk) | — | HTTP 200，错误落地页（标题 Error） | 需人工测试 |
+| 权重 / OneDrive | [分享入口](https://1drv.ms/u/c/1495c176035c0989/IQC_DSvX2FfxRrrIhwz_O7L-AfOekbesJ90LgyT1dyQLT-o?e=HRmyBq) | — | 当前管理页为持有链接可查看；已登录打开 HiBlastNet_Weights.zip 下载页面；匿名 GET 仅到动态入口 | 匿名完整下载仍需测试 |
 | 权重 / 百度 | [分享入口](https://pan.baidu.com/s/1EQbfUBzC3oSwfghtue5rhA?pwd=9zgt) | 9zgt | HTTP 200，提取码页，未验证取文件 | 需人工测试 |
 
-OneDrive 的 HTTP 200 不能证明分享有效。数据集和权重旧入口返回 Error 页面，属于异常；不能断言一定失效，也不能标为可用。原图入口返回通用动态页面，没有验证到具体可下载文件。百度只到提取码页面，没有验证提取码和实际下载。
+OneDrive 的 HTTP 200 不能证明分享有效。初次检查的数据集和权重旧入口返回 Error 页面，用户也报告了旧数据集地址“无法访问此文档”的错误；这两个地址已从双语 README 移除。原图入口仅验证到通用动态页面。百度只到提取码页面，没有验证提取码和实际下载。
 
-### 原 main 工作树的待提交链接差异
+### 原 main 工作树的待提交链接差异（历史与当前状态）
 
-分支基于已提交的 `f752635`，未复制原 main 的未提交 README 改动。两份 README 在分支内部的 6 个链接完全相同；原 main 两份 README 的 6 个链接也彼此相同，但新旧版本之间有以下 4 项不同：
+首次检查时，分支基于已提交的 `f752635`，与原 main 未提交 README 有以下 4 项差异。下表保留修复前的地址作为审查记录；本次已采用右列两个 OneDrive 地址。百度两项仍保留分支原地址，尚待核对提取码和文件。
 
-| 资源 | 本分支保留的已提交版本 | 原 main 工作树的未提交版本 |
+| 资源 | f752635 初次检查版本（历史） | 原 main 工作树的未提交版本 |
 | --- | --- | --- |
 | 数据集 / OneDrive | [分支链接](https://1drv.ms/u/c/1495c176035c0989/IQC3HxyG_ktHSpHlq_E-5vmXAYjrLFhmseHouaPyHpjrC-4?e=SkNipz) | [主工作树未提交链接](https://1drv.ms/u/c/1495c176035c0989/IQCrwwXhApP_TpZNFzTIXQelAe2YA5BwKQ68frvLGekOpbQ?e=dtETWr) |
 | 数据集 / 百度 | [分支链接](https://pan.baidu.com/s/1K6AEge89TWjPSs5MAovVrg?pwd=p1p6) | [主工作树未提交链接](https://pan.baidu.com/s/1NVcVG6-oodVIuDr7NFXPbg?pwd=b1ia) |
 | 权重 / OneDrive | [分支链接](https://1drv.ms/u/c/1495c176035c0989/IQBf-shaXSRVTaecn952a2AjAYvkrAHUWIZh25kWocqEaow?e=8L8BUk) | [主工作树未提交链接](https://1drv.ms/u/c/1495c176035c0989/IQC_DSvX2FfxRrrIhwz_O7L-AfOekbesJ90LgyT1dyQLT-o?e=HRmyBq) |
 | 权重 / 百度 | [分支链接](https://pan.baidu.com/s/1EQbfUBzC3oSwfghtue5rhA?pwd=9zgt) | [主工作树未提交链接](https://pan.baidu.com/s/1TgPxlUOWIozmfnboUXg0Yw?pwd=i6jd) |
 
-主工作树这两个较新的 OneDrive 入口返回通用 Microsoft OneDrive 页面，仍未完成实际下载验证。**未选择、替换或合并任一链接**；请作者确定采用哪组。30 张原图的两个 URL 没有分歧。
+当前双语 README 的数据集和权重 OneDrive 地址已与原 main 的较新地址一致。30 张原图的两个 URL 没有分歧。百度新旧两组地址均没有经过实际取文件验证，因此未自动替换。
 
 ## 范围外发现：干净克隆缺失数据加载代码
 
@@ -150,6 +154,7 @@ OneDrive 的 HTTP 200 不能证明分享有效。数据集和权重旧入口返�
 - `git ls-files --others --ignored --exclude-standard -- 'blastseg/data/*.py'` 在原工作树列出以上四个文件。
 - `git check-ignore -v blastseg/data/full_leaf.py` 指向 `.gitignore:5:data/`。
 - 干净 worktree 没有 `blastseg/data/`，而 `blastseg/train.py`、`blastseg/test.py`、`blastseg/full_leaf_inference.py` 需要从该模块导入。
+- 后续只读实测：在 `blastseg` 环境中分别导入 `blastseg.data`、`blastseg.train`、`blastseg.test` 和 `blastseg.full_leaf_inference`，四者均报 `ModuleNotFoundError: No module named 'blastseg.data'`。`scripts/run_photo_pipeline.py:26` 导入推理模块，原图分割评级流程也受此影响。
 - 中文 README 早已有的链接 `blastseg/data/full_leaf.py` 在干净检出中失效。
 
 这会阻断干净克隆后的训练、评估和依赖该模块的预测入口。**本轮按范围限制未改 `.gitignore`、未补四个文件，也未启动依赖它们的完整评估。**
@@ -160,7 +165,7 @@ OneDrive 的 HTTP 200 不能证明分享有效。数据集和权重旧入口返�
 
 | 文件 | 本轮变更 |
 | --- | --- |
-| `README.md` | 当前题目、Citation 题目、Table 7 引用、12 个 SHA-256、容差单位/均值判定说明、未过滤分割指标与报告过滤的区别。下载链接和代码块保持原样。 |
+| `README.md` | 当前题目、Citation 题目、Table 7 引用、12 个 SHA-256、容差单位/均值判定说明、未过滤分割指标与报告过滤的区别，以及数据集/权重两个 OneDrive 地址。代码块保持原样。 |
 | `README.zh-CN.md` | 与英文版同步的题目、表号、哈希和统计口径。 |
 | `scripts/check_reproduction.py` | 仅 Table 3 文案及 `PAPER_TABLE3` 符号同步改名；40 个数字、0.05 默认容差、读结果/计算均值/样本 SD/判定逻辑不变。 |
 | `PAPER_ALIGNMENT_REPORT.md` | 本报告。 |
@@ -169,7 +174,7 @@ OneDrive 的 HTTP 200 不能证明分享有效。数据集和权重旧入口返�
 
 1. 逐项断言 40 个参考数字与提示词一致，12 个发布文件名与索引一致。
 2. 脚本文本差异严格限定为表号及同名引用替换，无算法变化；语法解析通过。
-3. 两版 README 各含 12 个完整哈希，题目均已同步，许可证段落、原命令代码块和六个下载链接均与基线一致。
+3. 两版 README 各含 12 个完整哈希，题目均已同步，许可证段落及原命令代码块与基线一致。后续修复只替换两个获准的 OneDrive 地址；其余四个下载链接均与基线一致，双语六个入口逐项相同。
 4. `check_reproduction.py --help` 正常并显示 Table 7。
 5. `--no-run` 正确报告缺少 12 次评估的结果并返回 1；这是预期的缺结果行为，**不是复现通过**，未触发模型评估。
 6. 已发现的旧文档失效路径如实报告；没有引入新的失效本地文件链接。
@@ -180,7 +185,7 @@ OneDrive 的 HTTP 200 不能证明分享有效。数据集和权重旧入口返�
 ## 需要作者处理或确认
 
 1. **先解决缺失的四个数据加载模块**：确认是否允许另开范围补齐忽略规则和文件跟踪；本分支未做该修复。
-2. **下载链接**：确认四项新旧入口取舍，并用无痕/匿名浏览器实际取文件；检查百度提取码、归档名及下载文件哈希。当前六个链接均“需人工测试”。
+2. **下载验证**：两个 OneDrive 旧地址已修复。仍须用无痕/匿名浏览器实际取文件，核对文件名及下载包哈希；百度两组新旧地址及提取码尚待选择和验证。其余入口未完成实际下载，不能据此认定无效。
 3. 若要求“全部 12 个哈希逐一与论文资料核对”，需提供 Baseline 和 Baseline + LCJS 的 6 个论文哈希；本轮已完整验证发布包自身一致性。
 4. 中文“抗病型/抗性型”的术语取舍由作者决定；编码与形态含义没有发现矛盾。
 5. 原 main 中已存在的未提交 README 修改仍留原处，包括英文 clone URL 的 `YOUR_USERNAME` 占位符及下载/解压说明差异。本分支使用已提交的真实 clone URL。审核时不要把原工作树差异误当本轮修改。

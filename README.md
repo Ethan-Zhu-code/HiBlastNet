@@ -55,7 +55,7 @@ The **BlastLeaf** dataset contains 707 leaf regions of interest (ROIs) from 283 
 
 | Mirror | Link | Extraction code |
 | --- | --- | --- |
-| OneDrive | [Download](https://1drv.ms/u/c/1495c176035c0989/IQC3HxyG_ktHSpHlq_E-5vmXAYjrLFhmseHouaPyHpjrC-4?e=SkNipz) | — |
+| OneDrive | [Download](https://1drv.ms/u/c/1495c176035c0989/IQCrwwXhApP_TpZNFzTIXQelAe2YA5BwKQ68frvLGekOpbQ?e=dtETWr) | — |
 | Baidu Netdisk | [Download](https://pan.baidu.com/s/1K6AEge89TWjPSs5MAovVrg?pwd=p1p6) | `p1p6` |
 
 BlastLeaf is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): you may share and adapt it for any purpose, including commercially, provided you give appropriate credit.
@@ -118,7 +118,7 @@ Checkpoints are released for the four configurations of the paper's ablation (Ta
 
 | Mirror | Link | Extraction code |
 | --- | --- | --- |
-| OneDrive | [Download](https://1drv.ms/u/c/1495c176035c0989/IQBf-shaXSRVTaecn952a2AjAYvkrAHUWIZh25kWocqEaow?e=8L8BUk) | — |
+| OneDrive | [Download](https://1drv.ms/u/c/1495c176035c0989/IQC_DSvX2FfxRrrIhwz_O7L-AfOekbesJ90LgyT1dyQLT-o?e=HRmyBq) | — |
 | Baidu Netdisk | [Download](https://pan.baidu.com/s/1EQbfUBzC3oSwfghtue5rhA?pwd=9zgt) | `9zgt` |
 
 The weights are released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Put the twelve `.pth` files in `weights/`. The archive's `manifest.json` lists the SHA-256 checksum of every file. Use the configurations in `configs/evaluation/` rather than the archive's `test_configs/`, which record the original training environment.

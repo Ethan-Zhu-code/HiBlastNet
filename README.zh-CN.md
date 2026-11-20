@@ -53,7 +53,7 @@ python -m pip install -r requirements.txt
 
 | 网盘 | 链接 | 提取码 |
 | --- | --- | --- |
-| OneDrive | [下载](https://1drv.ms/u/c/1495c176035c0989/IQC3HxyG_ktHSpHlq_E-5vmXAYjrLFhmseHouaPyHpjrC-4?e=SkNipz) | — |
+| OneDrive | [下载](https://1drv.ms/u/c/1495c176035c0989/IQCrwwXhApP_TpZNFzTIXQelAe2YA5BwKQ68frvLGekOpbQ?e=dtETWr) | — |
 | 百度网盘 | [下载](https://pan.baidu.com/s/1K6AEge89TWjPSs5MAovVrg?pwd=p1p6) | `p1p6` |
 
 数据集采用 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 许可，注明来源后可分享和改编，包括商业用途。解压后整理为以下目录结构：
@@ -107,7 +107,7 @@ HiBlastNet/
 
 | 网盘 | 链接 | 提取码 |
 | --- | --- | --- |
-| OneDrive | [下载](https://1drv.ms/u/c/1495c176035c0989/IQBf-shaXSRVTaecn952a2AjAYvkrAHUWIZh25kWocqEaow?e=8L8BUk) | — |
+| OneDrive | [下载](https://1drv.ms/u/c/1495c176035c0989/IQC_DSvX2FfxRrrIhwz_O7L-AfOekbesJ90LgyT1dyQLT-o?e=HRmyBq) | — |
 | 百度网盘 | [下载](https://pan.baidu.com/s/1EQbfUBzC3oSwfghtue5rhA?pwd=9zgt) | `9zgt` |
 
 权重采用 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 许可。解压后将 12 个 `.pth` 文件放入 `weights/`；压缩包里的 `manifest.json` 提供逐文件 SHA-256 校验值。评估请使用仓库的 `configs/evaluation/`，压缩包内的 `test_configs/` 记录的是原始实验环境。
