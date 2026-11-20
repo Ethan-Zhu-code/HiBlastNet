@@ -2,7 +2,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 weights/
-data/
+/data/
 outputs/
 *.pth
 *.pt
