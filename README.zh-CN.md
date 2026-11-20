@@ -4,7 +4,7 @@
   <img src=".github/media/hiblastnet-banner-clean.png" alt="HiBlastNet 水稻叶瘟病斑分割示意图" width="100%" />
 </p>
 
-<p align="center"><strong>在标定后的整叶图像上分割水稻叶瘟病斑。</strong></p>
+<p align="center"><strong>HiBlastNet: a scale-preserving segmentation network for small rice blast lesions in quantitative measurement and severity grading</strong></p>
 
 <p align="center">
   <a href="#安装">安装</a> &nbsp;·&nbsp;
@@ -20,7 +20,7 @@
 
 ---
 
-本仓库提供论文 *Preserving small lesions in full-leaf segmentation of rice blast: a calibrated workflow for lesion morphology and severity measurement* 的分割模型训练与评估代码。HiBlastNet 将图像中的每个像素分为背景、健康叶组织、感病型病斑或抗病型病斑。
+本仓库提供论文 *HiBlastNet: a scale-preserving segmentation network for small rice blast lesions in quantitative measurement and severity grading* 的分割模型训练与评估代码。HiBlastNet 将图像中的每个像素分为背景、健康叶组织、感病型病斑或抗病型病斑。
 
 | 保留叶片细节 | 细化病斑边界 | 监督病斑组件 |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ HiBlastNet/
 
 ## 预训练权重
 
-论文表 3 的四组配置各提供 seed 100、101、102 的检查点：
+论文表 7 的四组配置各提供 seed 100、101、102 的检查点：
 
 | 配置 | ID | 文件 |
 | --- | --- | --- |
@@ -113,6 +113,28 @@ HiBlastNet/
 权重采用 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 许可。解压后将 12 个 `.pth` 文件放入 `weights/`；压缩包里的 `manifest.json` 提供逐文件 SHA-256 校验值。评估请使用仓库的 `configs/evaluation/`，压缩包内的 `test_configs/` 记录的是原始实验环境。
 
 发布的检查点已经过推理重参数化（`deploy` 格式）。其他对比模型与消融设置可按下文自行训练。检查点通过 Python pickle 加载，请只使用可信来源的权重。
+
+<details>
+<summary>全部 12 个发布文件的 SHA-256 校验值</summary>
+
+以下校验值由 `HiBlastNet_Weights.zip` 中的权重文件逐一计算得到，均与包内 `manifest.json` 一致。其中 HiBlastNet 和细化对照的 6 项也与本次提供的论文 Dataset S1 哈希一致；HiBlastNet seed 100 的哈希以 `9d3f5da2` 开头，与 Dataset S2 的记录一致。其余 6 项用于标识发布文件，本次没有单独提供的论文哈希可作对照。
+
+| 文件（位于 `weights/`） | SHA-256 |
+| --- | --- |
+| `current_bc_lcjs_seed100.pth` | `9d3f5da2ef7117a7a679455498c4acb2d92ee61f3a488af4491f07911659bb10` |
+| `current_bc_lcjs_seed101.pth` | `d828b1d41749b01c4bd674da2d342e1130d02c1d4318cac07b014db1a5c62998` |
+| `current_bc_lcjs_seed102.pth` | `9b49f3dd769db333f80eb0ea229f12eb419ab5ffd793756d3057976ee79c17ad` |
+| `current_bc_control_seed100.pth` | `9eda19af56462e83a41df0be845c0b6625f754a55d3f31bb2f122f9f631a91c1` |
+| `current_bc_control_seed101.pth` | `47e2e24636e3863cb97bfed93aa86b7ab49d72e4387ffb332ca4fc7780c50d64` |
+| `current_bc_control_seed102.pth` | `07d5e3a4f3ab9f57f1b6286b36249bbc025fb1efa7877dfe696ff505a167457b` |
+| `current_b_lcjs_seed100.pth` | `d59bcf43e308619c91d6f39c995a60b2227fbbd90ff8ec76ba35d05ef81f7e95` |
+| `current_b_lcjs_seed101.pth` | `7ee214cdc9be93e9b92eb77fba63927c57cdce86dab0c2d89ba8de19f0fe0684` |
+| `current_b_lcjs_seed102.pth` | `614b90310b076d05fee249c60e4bd5cedd9a6207f139377027a1b484ae0c297d` |
+| `current_b_plain_seed100.pth` | `9a11a5553d76307c48e4cb6d1404e13c5124d0764d58f6f5a79f774996d6a574` |
+| `current_b_plain_seed101.pth` | `c2d8f0b70123cfcfae6a40077f57c87c31a4327631f276c68f8e65a294006d05` |
+| `current_b_plain_seed102.pth` | `94544aeab444b3c939c7778731b72e2c2acf2d6755705216a1743f2c87e77087` |
+
+</details>
 
 ## 训练
 
@@ -164,7 +186,9 @@ python scripts/evaluate.py --model-path outputs/training/hiblastnet/RUN_FOLDER/c
 
 使用 `--list` 查看方法，`--split val` 评估验证集，`--dry-run` 仅打印实际执行的 `test.py` 命令。
 
-**复现论文表 3。** 运行 `python scripts/check_reproduction.py` 评估 12 个发布检查点，并对照论文数值输出三个随机种子的均值和标准差。
+**复现论文表 7。** 运行 `python scripts/check_reproduction.py` 评估 12 个发布检查点，并对照论文数值输出三个随机种子的均值和标准差。
+
+参考值为论文 Table 7（正文表 7）中原始消融预测、未过滤掩膜的三个种子均值 ± 样本标准差。Matched recall 使用组件 IoU ≥ 0.10。默认 `--tolerance 0.05` 检查重现的三种子均值与论文均值之差的绝对值：Dice、Small survival、Matched recall 和 Boundary F1 为 **0.05 个百分点**，FP/leaf 为 **0.05 个组件/叶**。样本标准差只展示，不参与容差判定；脚本没有逐种子的期望值检查。相同权重重新推理时，数值可能在最后一位与论文不同（Supplementary Section S5）。
 
 **进一步分析。** `scripts/analyze_predictions.py` 读取保存的掩膜，计算 IoU 阈值 0.10 和 0.50 下的一对一组件匹配指标、逐叶病斑面积误差、去除小于 24 像素的预测组件后的结果，以及可选的按来源照片抽样的 bootstrap 区间。
 
@@ -204,7 +228,7 @@ python scripts/run_photo_pipeline.py --image "path/to/board.jpg" --output-dir ou
 | `leaves/leaf_*/` | 60 像素/mm 单叶图、类别标签掩膜、叠加图、几何信息和病斑测量 |
 | `run.json` | 标定和推理设置，以及执行状态 |
 
-脚本保留原始预测掩膜。测量时去除小于 24 像素的同类连通组件，再按论文的感病型病斑面积规则 `seedling_new_standard_v2` 计算 0–9 级。空掩膜不评级，标定不足时会报错。使用评级前请核对裁切和叠加图。
+脚本保留原始预测掩膜。测量时去除小于 24 像素的同类连通组件，再按论文的感病型病斑面积规则 `seedling_new_standard_v2` 计算 0–9 级。空掩膜不评级，标定不足时会报错。 不设物理面积下限。Dice、Small survival 等 Table 7 分割指标基于未过滤掩膜；24 像素过滤只用于报告与分级。使用评级前请核对裁切和叠加图。
 
 标定板布局和叶片检测参考配套的 `rice_blast_system`。定位在缩小的整板预览中进行，推理用的单叶图则以 60 像素/mm 直接从原图采样。
 
@@ -262,11 +286,11 @@ python scripts/train_blob_loss.py --config configs/training/gcnet_bc_blob.yaml -
 
 - 论文报告三个种子（100、101、102）的均值 ± 标准差。单次运行会有差异，硬件和软件版本也可能影响结果。
 - 按验证集上 EMA 权重的病斑 Dice 选取检查点，测试集不参与训练。
-- 仓库是论文代码的整理版。`scripts/check_reproduction.py` 对照论文表 3 验证发布的权重；同一检查点重新推理时，部分数值的末位可能有变化（见论文补充材料 S5）。
+- 仓库是论文代码的整理版。`scripts/check_reproduction.py` 对照论文表 7 验证发布的权重；同一检查点重新推理时，部分数值的末位可能有变化（见论文补充材料 S5）。
 
 ## 引用
 
-论文正在准备中。正式引用信息可用后会补充 BibTeX，现阶段可引用本仓库的网址。
+论文 *HiBlastNet: a scale-preserving segmentation network for small rice blast lesions in quantitative measurement and severity grading* 为 in preparation（准备中）。正式引用信息可用后会补充 BibTeX，现阶段可引用本仓库的网址。
 
 ## 许可证
 

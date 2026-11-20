@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>Full-leaf rice blast lesion segmentation on calibrated leaf images.</strong>
+  <strong>HiBlastNet: a scale-preserving segmentation network for small rice blast lesions in quantitative measurement and severity grading</strong>
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@
 
 ---
 
-This repository contains the code to train and evaluate the segmentation models in the paper *Preserving small lesions in full-leaf segmentation of rice blast: a calibrated workflow for lesion morphology and severity measurement*. HiBlastNet labels every pixel of a leaf image as background, healthy tissue, susceptible-type lesion or resistant-type lesion.
+This repository contains the code to train and evaluate the segmentation models in the paper *HiBlastNet: a scale-preserving segmentation network for small rice blast lesions in quantitative measurement and severity grading*. HiBlastNet labels every pixel of a leaf image as background, healthy tissue, susceptible-type lesion or resistant-type lesion.
 
 | Keep leaf detail | Refine lesion boundaries | Supervise lesion components |
 | :--- | :--- | :--- |
@@ -107,7 +107,7 @@ Download **`BlastLeaf_30_Original_Photos.zip`** (419 MB) for 30 original referen
 
 ## Trained weights
 
-Checkpoints are released for the four configurations of the paper's ablation (Table 3), each trained with seeds 100, 101 and 102:
+Checkpoints are released for the four configurations of the paper's ablation (Table 7), each trained with seeds 100, 101 and 102:
 
 | Configuration | ID | Files |
 | --- | --- | --- |
@@ -124,6 +124,28 @@ Checkpoints are released for the four configurations of the paper's ablation (Ta
 The weights are released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Put the twelve `.pth` files in `weights/`. The archive's `manifest.json` lists the SHA-256 checksum of every file. Use the configurations in `configs/evaluation/` rather than the archive's `test_configs/`, which record the original training environment.
 
 The released checkpoints are re-parameterized for inference ("deploy" form). The comparison models and the other ablations are not released; train them with the commands below. Checkpoints are loaded with Python pickle, so only load checkpoints from sources you trust.
+
+<details>
+<summary>SHA-256 checksums of all 12 released files</summary>
+
+The checksums below were computed from the checkpoint bytes inside `HiBlastNet_Weights.zip` and match its `manifest.json`. The six HiBlastNet and refinement-control hashes also match the values supplied for paper Dataset S1; the seed-100 HiBlastNet hash starts with `9d3f5da2`, as recorded in Dataset S2. The other six hashes identify the release files and were not independently compared with a paper hash in this audit.
+
+| File (under `weights/`) | SHA-256 |
+| --- | --- |
+| `current_bc_lcjs_seed100.pth` | `9d3f5da2ef7117a7a679455498c4acb2d92ee61f3a488af4491f07911659bb10` |
+| `current_bc_lcjs_seed101.pth` | `d828b1d41749b01c4bd674da2d342e1130d02c1d4318cac07b014db1a5c62998` |
+| `current_bc_lcjs_seed102.pth` | `9b49f3dd769db333f80eb0ea229f12eb419ab5ffd793756d3057976ee79c17ad` |
+| `current_bc_control_seed100.pth` | `9eda19af56462e83a41df0be845c0b6625f754a55d3f31bb2f122f9f631a91c1` |
+| `current_bc_control_seed101.pth` | `47e2e24636e3863cb97bfed93aa86b7ab49d72e4387ffb332ca4fc7780c50d64` |
+| `current_bc_control_seed102.pth` | `07d5e3a4f3ab9f57f1b6286b36249bbc025fb1efa7877dfe696ff505a167457b` |
+| `current_b_lcjs_seed100.pth` | `d59bcf43e308619c91d6f39c995a60b2227fbbd90ff8ec76ba35d05ef81f7e95` |
+| `current_b_lcjs_seed101.pth` | `7ee214cdc9be93e9b92eb77fba63927c57cdce86dab0c2d89ba8de19f0fe0684` |
+| `current_b_lcjs_seed102.pth` | `614b90310b076d05fee249c60e4bd5cedd9a6207f139377027a1b484ae0c297d` |
+| `current_b_plain_seed100.pth` | `9a11a5553d76307c48e4cb6d1404e13c5124d0764d58f6f5a79f774996d6a574` |
+| `current_b_plain_seed101.pth` | `c2d8f0b70123cfcfae6a40077f57c87c31a4327631f276c68f8e65a294006d05` |
+| `current_b_plain_seed102.pth` | `94544aeab444b3c939c7778731b72e2c2acf2d6755705216a1743f2c87e77087` |
+
+</details>
 
 ## Train
 
@@ -184,7 +206,9 @@ Other options:
 - `--split val` evaluates the validation set.
 - `--dry-run` prints the underlying `test.py` command without running it.
 
-**Reproduce Table 3.** `python scripts/check_reproduction.py` evaluates the twelve released checkpoints and prints mean ± SD over the three seeds next to the paper's values.
+**Reproduce Table 7.** `python scripts/check_reproduction.py` evaluates the twelve released checkpoints and prints mean ± SD over the three seeds next to the paper's values.
+
+The references are the three-seed mean ± sample SD from the original, unfiltered ablation predictions in Table 7. Matched recall uses a component IoU threshold of 0.10. The default `--tolerance 0.05` checks the absolute difference between the reproduced three-seed mean and the paper mean: **0.05 percentage points** for Dice, Small survival, Matched recall, and Boundary F1, and **0.05 components per leaf** for FP/leaf. The sample SD is displayed but is not checked against a tolerance; there is no per-seed reference-value check. Re-inference of the same weights can differ in the last reported digit (Supplementary Section S5).
 
 **Further analyses.** `scripts/analyze_predictions.py` reads saved prediction masks and computes the remaining analyses in the paper:
 
@@ -229,7 +253,7 @@ Use `--model-path` to select another downloaded checkpoint and `--device cpu` to
 | `leaves/leaf_*/` | 60 px/mm ROI, class-label mask, colour overlay, geometry and lesion measurements |
 | `run.json` | Calibration, inference settings, and completion or failure status |
 
-The script retains the raw prediction mask. For measurements, it excludes same-class components smaller than 24 pixels and applies the paper's susceptible-area-based 0–9 rule (`seedling_new_standard_v2`). An empty predicted leaf mask is left ungraded. Check the crop and overlay before using the grade. A photo with inadequate calibration fails rather than assigning a grade at an assumed scale.
+The script retains the raw prediction mask. For measurements, it excludes same-class components smaller than 24 pixels and applies the paper's susceptible-area-based 0–9 rule (`seedling_new_standard_v2`). An empty predicted leaf mask is left ungraded. No physical-area minimum is applied. Dice, Small survival, and the other Table 7 segmentation metrics use unfiltered masks; the 24-pixel filter is for reporting and grading. Check the crop and overlay before using the grade. A photo with inadequate calibration fails rather than assigning a grade at an assumed scale.
 
 The board layout and ROI detector are adapted from the companion `rice_blast_system` implementation. Detection uses a reduced board preview; each inference crop is sampled directly from the source image at 60 px/mm.
 
@@ -289,11 +313,11 @@ The component-local and healthy terms are ramped up over the first three epochs.
 
 - The paper reports mean ± standard deviation over seeds 100, 101 and 102. A single run will differ from that mean; scores also vary with hardware and software versions.
 - Checkpoints are selected on the validation set by lesion Dice using the EMA weights. The test set is not used during training.
-- This code is a cleaned version of the code used for the paper. `scripts/check_reproduction.py` compares the released checkpoints with Table 3. Table 3 comes from the original inference run; a later re-inference of the same checkpoints changed a few values in the last digit (paper, Supplementary S5).
+- This code is a cleaned version of the code used for the paper. `scripts/check_reproduction.py` compares the released checkpoints with Table 7. Table 7 comes from the original inference run; a later re-inference of the same checkpoints changed a few values in the last digit (paper, Supplementary S5).
 
 ## Citation
 
-The paper describing HiBlastNet and BlastLeaf is in preparation. A BibTeX entry will be added here once it is available. Until then, please cite this repository by its URL.
+*HiBlastNet: a scale-preserving segmentation network for small rice blast lesions in quantitative measurement and severity grading* is in preparation. A BibTeX entry will be added here once it is available. Until then, please cite this repository by its URL.
 
 ## License
 

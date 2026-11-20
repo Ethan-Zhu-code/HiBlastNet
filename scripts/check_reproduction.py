@@ -1,4 +1,4 @@
-"""Evaluate the released checkpoints and compare with the paper's ablation table (Table 3).
+"""Evaluate the released checkpoints and compare with the paper's ablation table (Table 7).
 
 For each released configuration (Baseline, Baseline + BC-MSRR, Baseline + LCJS,
 HiBlastNet) and seed (100, 101, 102), this script runs scripts/evaluate.py unless
@@ -8,7 +8,7 @@ to the published values.
     python scripts/check_reproduction.py            # evaluate what is missing, then compare
     python scripts/check_reproduction.py --no-run   # compare existing results only
 
-The paper's Table 3 comes from the original inference run; a later re-inference of
+The paper's Table 7 comes from the original inference run; a later re-inference of
 the same checkpoints changed a few values in the last reported digit, so differences
 of about 0.01-0.02 are expected.
 """
@@ -22,8 +22,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SEEDS = (100, 101, 102)
 
-# Table 3: mean and sample SD over seeds 100/101/102 (test set, unfiltered predictions).
-PAPER_TABLE3 = {
+# Table 7: mean and sample SD over seeds 100/101/102 (test set, unfiltered predictions).
+PAPER_TABLE7 = {
     "gcnet": {"label": "Baseline", "dice": (80.86, 0.10), "small_survival": (55.18, 0.92),
               "matched_recall": (83.32, 0.17), "fp_per_leaf": (10.80, 0.11), "boundary_f1": (71.16, 0.53)},
     "gcnet_bc": {"label": "Baseline + BC-MSRR", "dice": (81.68, 0.09), "small_survival": (60.30, 0.33),
@@ -58,7 +58,7 @@ def main(argv=None):
                         help="Largest acceptable |reproduced mean - paper mean| (default 0.05)")
     args = parser.parse_args(argv)
 
-    for method in PAPER_TABLE3:
+    for method in PAPER_TABLE7:
         for seed in SEEDS:
             if read_metrics(method, seed) is None and not args.no_run:
                 print(f"Evaluating {method} seed {seed} ...", flush=True)
@@ -72,7 +72,7 @@ def main(argv=None):
     all_ok = True
     header = f"{'Configuration':22s} {'Metric':15s} {'Reproduced':>17s} {'Paper':>17s} {'Diff':>7s}"
     print("\n" + header + "\n" + "-" * len(header))
-    for method, paper in PAPER_TABLE3.items():
+    for method, paper in PAPER_TABLE7.items():
         results = [read_metrics(method, seed) for seed in SEEDS]
         if any(r is None for r in results):
             missing = [str(s) for s, r in zip(SEEDS, results) if r is None]
